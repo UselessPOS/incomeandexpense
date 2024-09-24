@@ -13,26 +13,19 @@ const Home=() =>{
   
   <Signin/>
 
-//   // <Signup/>
+//   <Signup/>
 
-//   // <Loading/>
+//   <Loading/>
 
-//   // <Selectcurrency/>
+//   <Selectcurrency/>
 
-//   // <Cashbalance/>
+//   <Cashbalance/>
 
 // <Success/>
 
 
 
-
-
-
-
-
-
-
-  );
+  )
 };
 
 export default Home
