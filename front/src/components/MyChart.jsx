@@ -14,8 +14,8 @@ const MyChart = () => {
       {
         label: 'My First Dataset',
         data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(201, 242, 155, 1 )',
+        borderColor: 'rgba(201, 242, 155, 1 )',
         borderWidth: 1,
       },
     ],
@@ -29,7 +29,7 @@ const MyChart = () => {
       },
       title: {
         display: true,
-        text: 'Sample Bar Chart',
+        text: '',
       },
     },
   };
