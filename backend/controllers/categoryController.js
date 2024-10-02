@@ -1,25 +1,35 @@
-// controllers/categoryController.js
-const db = require('../models/db');
+import { sql } from '../models/db.js'; // Use ES module syntax
 
-exports.addCategory = async (req, res) => {
-  const { userId, categoryName, type } = req.body; // type: 'income' or 'expense'
+// Add a new category
+export const addCategory = async (req, res) => {
+  const { userId, categoryName, type } = req.body;
+  
   try {
-    const result = await db.query(
-      'INSERT INTO categories (user_id, category_name, type) VALUES ($1, $2, $3) RETURNING *',
-      [userId, categoryName, type]
-    );
-    res.status(201).json(result.rows[0]);
+    // Insert the category into the database
+    const result = await sql`INSERT INTO categories (user_id, category_name, type) 
+                             VALUES (${userId}, ${categoryName}, ${type}) 
+                             RETURNING *`;
+    
+    // Return the newly created category
+    res.status(201).json(result[0]); // Access the first row (the inserted category)
   } catch (error) {
+    console.error('Error adding category:', error);
     res.status(500).json({ error: 'Error adding category' });
   }
 };
 
-exports.getCategories = async (req, res) => {
+// Get all categories for a user
+export const getCategories = async (req, res) => {
   const { userId } = req.params;
+
   try {
-    const result = await db.query('SELECT * FROM categories WHERE user_id = $1', [userId]);
-    res.status(200).json(result.rows);
+    // Retrieve categories for the given user ID
+    const result = await sql`SELECT * FROM categories WHERE user_id = ${userId}`;
+    
+    // Return the list of categories
+    res.status(200).json(result); // The result is already an array of categories
   } catch (error) {
+    console.error('Error retrieving categories:', error);
     res.status(500).json({ error: 'Error retrieving categories' });
   }
 };

@@ -1,32 +1,55 @@
-
-const db = require('./db');
+import { sql } from './db.js'; // Use ES module syntax
 
 const Expense = {
+  // Create a new expense record
   create: async (userId, amount, date, category) => {
-    const result = await db.query(
-      'INSERT INTO expenses (user_id, amount, date, category) VALUES ($1, $2, $3, $4) RETURNING *',
-      [userId, amount, date, category]
-    );
-    return result.rows[0];
+    try {
+      const result = await sql`INSERT INTO expenses (user_id, amount, date, category) 
+                               VALUES (${userId}, ${amount}, ${date}, ${category}) 
+                               RETURNING *`;
+      return result[0]; // Return the newly created expense
+    } catch (error) {
+      console.error('Error creating expense:', error);
+      throw new Error('Error creating expense');
+    }
   },
 
+  // Find all expenses for a specific user
   findByUserId: async (userId) => {
-    const result = await db.query('SELECT * FROM expenses WHERE user_id = $1', [userId]);
-    return result.rows;
+    try {
+      const result = await sql`SELECT * FROM expenses WHERE user_id = ${userId}`;
+      return result; // Return all expenses for the user
+    } catch (error) {
+      console.error('Error finding expenses by user ID:', error);
+      throw new Error('Error finding expenses by user ID');
+    }
   },
 
+  // Update an expense record
   update: async (id, amount, date, category) => {
-    const result = await db.query(
-      'UPDATE expenses SET amount = $1, date = $2, category = $3 WHERE id = $4 RETURNING *',
-      [amount, date, category, id]
-    );
-    return result.rows[0];
+    try {
+      const result = await sql`UPDATE expenses 
+                               SET amount = ${amount}, date = ${date}, category = ${category} 
+                               WHERE id = ${id} 
+                               RETURNING *`;
+      return result[0]; // Return the updated expense
+    } catch (error) {
+      console.error('Error updating expense:', error);
+      throw new Error('Error updating expense');
+    }
   },
 
+  // Delete an expense record
   delete: async (id) => {
-    const result = await db.query('DELETE FROM expenses WHERE id = $1 RETURNING *', [id]);
-    return result.rows[0];
+    try {
+      const result = await sql`DELETE FROM expenses WHERE id = ${id} 
+                               RETURNING *`;
+      return result[0]; // Return the deleted expense
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+      throw new Error('Error deleting expense');
+    }
   },
 };
 
-module.exports = Expense;
+export default Expense;

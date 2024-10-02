@@ -1,11 +1,7 @@
 
-const { Pool } = require('pg');
-require('dotenv').config();
+import { neon } from "@neondatabase/serverless"
+import env from 'dotenv'
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, 
-});
+env.config()
 
-module.exports = {
-  query: (text, params) => pool.query(text, params),
-};
+export const sql = neon(process.env.DATABASE_URL)

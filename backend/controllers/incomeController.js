@@ -1,25 +1,31 @@
+import { sql } from '../models/db.js'; // Import your database instance
 
-const db = require('../models/db');
-
-exports.addIncome = async (req, res) => {
+export const addIncome = async (req, res) => {
   const { userId, amount, date, category } = req.body;
   try {
-    const result = await db.query(
-      'INSERT INTO income (user_id, amount, date, category) VALUES ($1, $2, $3, $4) RETURNING *',
-      [userId, amount, date, category]
-    );
-    res.status(201).json(result.rows[0]);
+    // Insert income into the database
+    const result = await sql`INSERT INTO income (user_id, amount, date, category) 
+                             VALUES (${userId}, ${amount}, ${date}, ${category}) RETURNING *`;
+
+    // Respond with the newly added income record
+    res.status(201).json(result[0]);  // Access the first (and likely only) row returned
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error adding income' });
   }
 };
 
-exports.getIncome = async (req, res) => {
+export const getIncome = async (req, res) => {
   const { userId } = req.params;
   try {
-    const result = await db.query('SELECT * FROM income WHERE user_id = $1', [userId]);
-    res.status(200).json(result.rows);
+    // Retrieve income records for the user
+    const result = await sql`SELECT * FROM income WHERE user_id = ${userId}`;
+
+    // Respond with the income records
+    res.status(200).json(result); // 'result' is already an array
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error retrieving income' });
   }
 };
+
